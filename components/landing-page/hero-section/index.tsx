@@ -13,7 +13,7 @@ import { TestimonialQuote } from "./TestimonialQuote";
 export function HeroSection() {
   return (
     <section className="container mx-auto px-14 relative overflow-hidden pt-16 lg:pt-24">
-      <div className="">
+      <div >
         <div className="space-y-16">
           {/* TOP */}
           <div className="relative ">
