@@ -32,7 +32,7 @@ export default function AppHeader() {
                 width={52}
                 height={52}
                 priority
-                className="h-10 w-10 object-cover sm:h-[52px] sm:w-[52px]"
+                className="h-10 w-10 object-cover sm:h-13 sm:w-13"
               />
             </div>
 
@@ -114,7 +114,7 @@ export default function AppHeader() {
       <aside
         className={`
           fixed top-0 right-0 z-50
-          h-screen w-[88%] max-w-[360px]
+          h-screen w-[88%] max-w-90
 
           bg-dark/90
           backdrop-blur-xl

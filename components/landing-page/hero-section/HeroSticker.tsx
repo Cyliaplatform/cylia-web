@@ -27,7 +27,7 @@ export function HeroSticker() {
   };
 
   return (
-    <div className="relative h-[180px] w-[180px]">
+    <div className="relative h-45 w-45">
       {/* Sticker Background */}
       <svg viewBox="0 0 180 180" className="absolute inset-0 h-full w-full">
         <path d={createStarburstPath(90, 90, 88, 80, 28)}  className="fill-gray-100" />
