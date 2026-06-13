@@ -21,7 +21,7 @@ export default function AppHeader() {
   return (
     <>
       {/* Header */}
-      <header className="container mx-auto mt-6 px-4 sm:mt-8 lg:mt-10">
+      <header className="container mx-auto mt-6 px-14 sm:mt-8 lg:mt-10">
         <div className="flex h-18 items-center justify-between rounded-full bg-dark p-2">
           {/* Logo */}
           <div className="flex items-center gap-2 sm:gap-3">

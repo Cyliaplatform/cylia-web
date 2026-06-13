@@ -5,6 +5,7 @@ export function HeroWatermark() {
   return (
     <div
       className="
+      
         pointer-events-none
         absolute
         inset-0
@@ -20,11 +21,10 @@ export function HeroWatermark() {
         alt="Cylia watermark"
         priority
         className="
-          w-[500px]
-        opacity-100
-          md:w-[750px]
+          w-125
+          md:w-187.5s
+          lg:w-250
 
-          lg:w-[1000px]
         "
       />
     </div>

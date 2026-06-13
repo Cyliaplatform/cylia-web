@@ -17,7 +17,7 @@ const cuisineRows = [
 
 export function CuisineTypes() {
   return (
-    <div className="absolute right-[6%] top-[60%] hidden -translate-y-1/2 xl:block">
+    <div className="absolute right-[8%] top-[68%] hidden -translate-y-1/2 xl:block">
       <div className="flex flex-col gap-3">
         {cuisineRows.map((row, rowIndex) => (
           <div

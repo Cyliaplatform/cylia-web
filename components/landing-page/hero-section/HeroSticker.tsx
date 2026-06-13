@@ -53,7 +53,6 @@ export function HeroSticker() {
             cx="90"
             cy="90"
             r="68"
-            // fill="#D1D5DB"
             fill="#F5F5F5"
             stroke="#BFC4CB"
             strokeWidth="1.5"
@@ -78,8 +77,8 @@ export function HeroSticker() {
           left-1/2
           top-1/2
           flex
-          h-[56px]
-          w-[56px]
+          h-14
+         w-14
           -translate-x-1/2
           -translate-y-1/2
           items-center

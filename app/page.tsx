@@ -1,7 +1,6 @@
 import { HeroSection } from "@/components/landing-page/hero-section";
-import { AppButton } from "@/components/shared/AppButton";
 
-export default function Home() {
+export default function LanndingPage() {
   return (
    <HeroSection/>
   );

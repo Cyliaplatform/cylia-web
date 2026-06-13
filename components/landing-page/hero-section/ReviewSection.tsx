@@ -1,16 +1,13 @@
 // ReviewsSection.tsx
-import user1 from "@/public/review-users/user1.png"
-import user2 from "@/public/review-users/user2.png"
-import user3 from "@/public/review-users/user3.png"
-import user4 from "@/public/review-users/user4.png"
+import user1 from "@/public/review-users/user1.png";
+import user2 from "@/public/review-users/user2.png";
+import user3 from "@/public/review-users/user3.png";
 
-const userImages = [
- user1,user2, user3,user3
-];
+const userImages = [user1, user2, user3, user3];
 
 export function ReviewsSection() {
   return (
-    <div className="absolute left-0 top-20 hidden xl:block">
+    <div className="absolute left-12 top-20 hidden xl:block">
       <div className="space-y-2">
         {/* Overlapping Avatar Stack */}
         <div className="flex items-center mb-3">
@@ -20,7 +17,7 @@ export function ReviewsSection() {
               style={{
                 width: 48,
                 height: 48,
-                
+
                 marginLeft: index === 0 ? 0 : -12,
                 position: "relative",
                 zIndex: userImages.length - index,
