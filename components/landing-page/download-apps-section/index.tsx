@@ -3,10 +3,10 @@ import Image from 'next/image';
 import { DownloadAppCard } from './DownloadAppCard';
 import { DownloadStats } from './DownloadStats';
 
-import sticker from '@/public/logo/hero-food-text-top-right-sticker.svg';
-import androidQr from '@/public/QR.png';
-import playStoreLogo from '@/public/logo/playstore.png';
-import applelogo from '@/public/logo/apple.png';
+import sticker from '@/public/images/logo/hero-food-text-top-right-sticker.svg';
+import androidQr from '@/public/images/QR.png';
+import playStoreLogo from '@/public/images/logo/playstore.png'
+import applelogo from '@/public/images/logo/apple.png';
 
 export function DownloadAppSection() {
   return (

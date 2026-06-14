@@ -1,5 +1,5 @@
 // HeroHeading.tsx
-import sticker from "@/public/logo/hero-food-text-top-right-sticker.svg"
+import sticker from "@/public/images/logo/hero-food-text-top-right-sticker.svg"
 import Image from "next/image"
 
 export function HeroHeading() {

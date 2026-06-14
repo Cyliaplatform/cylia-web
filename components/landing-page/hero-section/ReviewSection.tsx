@@ -1,7 +1,7 @@
 // ReviewsSection.tsx
-import user1 from "@/public/review-users/user1.png";
-import user2 from "@/public/review-users/user2.png";
-import user3 from "@/public/review-users/user3.png";
+import user1 from "@/public/images/review-users/user1.png";
+import user2 from "@/public/images/review-users/user2.png";
+import user3 from "@/public/images/review-users/user3.png";
 
 const userImages = [user1, user2, user3, user3];
 

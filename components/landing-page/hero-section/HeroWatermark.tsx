@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import watermark from '@/public/logo/cylia-watermark.png';
+import watermark from '@/public/images/logo/cylia-watermark.png';
 
 export function HeroWatermark() {
   return (

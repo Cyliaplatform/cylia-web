@@ -1,5 +1,5 @@
 import Image from "next/image";
-import mobileMockup from "@/public/mobile-mockup.png";
+import mobileMockup from "@/public/images/mockups/mobile-mockup.png";
 
 export function MobilePreview() {
   return (

@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Menu, X, ArrowRight } from "lucide-react";
 
 import { AppButton } from "@/components/shared/AppButton";
-import logo from "@/public/logo/cylia-logo.png";
+import logo from "@/public/images/logo/cylia-logo.png"
 
 export default function AppHeader() {
   const [open, setOpen] = useState(false);

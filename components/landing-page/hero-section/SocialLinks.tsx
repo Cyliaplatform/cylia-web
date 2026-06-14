@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 
-import facebook from "@/public/logo/facebook.png";
-import twitter from "@/public/logo/twitter.png";
-import instagram from "@/public/logo/instagram.png";
+import facebook from "@/public/images/logo/facebook.png";
+import twitter from "@/public/images/logo/twitter.png";
+import instagram from "@/public/images/logo/instagram.png";
 
 const socials = [
   {

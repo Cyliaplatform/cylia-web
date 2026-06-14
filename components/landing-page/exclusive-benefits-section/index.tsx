@@ -1,6 +1,6 @@
 import BenefitCard from "./BenefitCard";
 import { benefitCards } from "./data";
-import sticker from "@/public/stickers/white-main-sticker.png";
+import sticker from "@/public/images/stickers/white-main-sticker.png";
 
 export default function ExclusiveBenefitsSection() {
   return (
