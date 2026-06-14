@@ -3,6 +3,7 @@ import { DownloadAppSection } from "@/components/landing-page/download-apps-sect
 import ExclusiveBenefitsSection from "@/components/landing-page/exclusive-benefits-section";
 import FAQSection from "@/components/landing-page/faq-section";
 import { HeroSection } from "@/components/landing-page/hero-section";
+import RatingAndReviewsSection from "@/components/landing-page/rating-review-section";
 
 export default function LanndingPage() {
   return (
@@ -12,9 +13,8 @@ export default function LanndingPage() {
     <ExclusiveBenefitsSection/>
     <FeaturesSection/>
     <FAQSection/>
-    <div>
-      sa
-    </div>
+    <RatingAndReviewsSection/>
+    
    </div>
    
   );
