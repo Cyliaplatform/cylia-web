@@ -18,7 +18,7 @@ const stats = [
 
 export function DownloadStats() {
   return (
-   <div className="mt-10 flex items-start gap-10 lg:gap-14">
+   <div className="mt-10 flex justify-center 2xl:justify-start  items-start gap-10 lg:gap-14">
       {stats.map((item, index) => (
         <div
           key={item.label}
@@ -29,10 +29,11 @@ export function DownloadStats() {
           "
         >
           <div>
-            <div className="flex items-center">
+            <div className="flex items-center justify-center">
               <span
                 className="
-                  text-3xl
+                text-2xl
+                  md:text-3xl
                   font-bold
                   text-dark
                 "
@@ -43,7 +44,8 @@ export function DownloadStats() {
               <span
                 className="
                   ml-1
-                  text-3xl
+                  text-2xl
+                  md:text-3xl
                   font-bold
                   text-primary
                 "
@@ -55,7 +57,8 @@ export function DownloadStats() {
             <p
               className="
                 mt-2
-                text-lg
+                text-[16px]
+                md:text-lg
                 text-gray-500
               "
             >

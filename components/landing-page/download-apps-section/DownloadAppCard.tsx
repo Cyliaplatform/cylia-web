@@ -19,8 +19,10 @@ export function DownloadAppCard({
     <div
       className="
         relative
-        h-[360px]
-        w-[320px]
+      
+
+      h-85
+        w-75
         overflow-hidden
         rounded-[32px]
         bg-gray-100

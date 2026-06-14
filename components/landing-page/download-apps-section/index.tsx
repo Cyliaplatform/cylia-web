@@ -11,32 +11,39 @@ import applelogo from '@/public/logo/apple.png';
 export function DownloadAppSection() {
   return (
     <section className="py-16 lg:py-24">
-      <div className="container mx-auto px-16">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-16">
         <div
           className="
             flex
             flex-col
             gap-14
-            lg:flex-row
-            lg:justify-between
-            lg:gap-20
+            2xl:flex-row
+            2xl:items-center
+            2xl:justify-between
+            lg:gap-14
+            2xl:gap-20
           "
         >
           {/* LEFT */}
           <div
             className="
               w-full
-              lg:max-w-[620px]
-              lg:flex-shrink-0
+              text-center
+              2xl:max-w-[620px]
+              2xl:flex-shrink-0
+              2xl:text-left
             "
           >
             <div className="relative inline-block">
               <h2
                 className="
-                  text-[40px]
+                  text-[32px]
                   font-bold
-                  leading-[1.15]
+                  leading-tight
                   text-dark
+
+                  sm:text-[36px]
+                  lg:text-[40px]
                 "
               >
                 Download the{' '}
@@ -48,9 +55,11 @@ export function DownloadAppSection() {
                     alt=""
                     className="
                       absolute
-                      -right-7
+                      -right-6
                       -top-2
-                      w-6
+                      w-5
+
+                      sm:w-6
                     "
                   />
                 </span>
@@ -65,11 +74,16 @@ export function DownloadAppSection() {
 
             <p
               className="
+                mx-auto
                 mt-6
                 max-w-[520px]
-                text-lg
-                leading-9
+                text-base
+                leading-8
                 text-gray-500
+               
+
+                sm:text-lg
+                2xl:mx-0
               "
             >
               Fast, easy, and reliable food delivery at your fingertips.
@@ -84,8 +98,13 @@ export function DownloadAppSection() {
             className="
               flex
               flex-col
-              gap-6
-              sm:flex-row
+              items-center
+              gap-10
+            
+              lg:flex-row
+              lg:justify-center
+
+              2xl:justify-end
               lg:gap-8
             "
           >
@@ -93,7 +112,7 @@ export function DownloadAppSection() {
               title="For iOS"
               version="iOS 13+"
               qr={androidQr}
-              logo={ applelogo}
+              logo={applelogo}
             />
 
             <DownloadAppCard
