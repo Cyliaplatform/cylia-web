@@ -26,7 +26,7 @@ const socials = [
 
 export function SocialLinks() {
   return (
-    <div className="absolute  bottom-35 left-12 hidden xl:block">
+    <div className="absolute  bottom-35 left-6 hidden xl:block">
       <p className="mb-5 text-lg text-muted-foreground">
         Follow Us On
       </p>

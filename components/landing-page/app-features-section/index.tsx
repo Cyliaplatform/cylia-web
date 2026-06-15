@@ -1,9 +1,22 @@
+import { AppTextMarquee } from '@/components/shared/AppTextMarquee';
 import FeatureCard from './FeatureCard';
 import { featureCards } from './data';
 
 export default function FeaturesSection() {
   return (
     <section className="relative overflow-hidden">
+       <div >
+        <AppTextMarquee
+          items={[
+            'Bakery',
+            'Healthy Food',
+            'Cake',
+            'Beverages',
+            'Ice Creams',
+            'Dessert',
+          ]}
+        />
+      </div>
       {/* Top Dark Background */}
       <div className="absolute inset-x-0 top-0 h-[75%] bg-[#111827]" />
 

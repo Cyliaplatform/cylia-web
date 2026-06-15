@@ -1,5 +1,5 @@
-
 import sticker from "@/public/images/logo/hero-food-text-top-right-sticker.svg";
+import { AppTextMarquee } from '@/components/shared/AppTextMarquee';
 import BecomeVendorForm from "./BecomeVendorForm";
 import { VendorFormStepper } from "./FormStepper";
 
@@ -40,6 +40,8 @@ export default function BecomeVendorSection() {
           </div>
         </div>
       </div>
+
+     
     </section>
   );
 }

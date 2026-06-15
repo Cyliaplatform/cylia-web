@@ -1,11 +1,13 @@
 import FAQAccordion from './FAQAccordion';
 import ContactCards from './ContactCards';
 import { faqItems } from './data';
+import { AppTextMarquee } from '@/components/shared/AppTextMarquee';
 
 export default function FAQSection() {
   return (
-    <section className="bg-[#111827] py-24">
-      <div className="container mx-auto px-4">
+    <section>
+     <div  className="bg-[#111827] py-24">
+       <div className="container mx-auto px-4">
         {/* Top Section */}
         <div className="mx-auto mb-16 max-w-4xl text-center">
           <div className="mb-6 flex items-center justify-center gap-3">
@@ -32,6 +34,21 @@ export default function FAQSection() {
           {/* Right */}
           <ContactCards />
         </div>
+      </div>
+     </div>
+
+      <div className="">
+        <AppTextMarquee
+          items={[
+            'Bakery',
+            'Healthy Food',
+            'Cake',
+            'Beverages',
+            'Ice Creams',
+            'Dessert',
+          ]}
+        
+        />
       </div>
     </section>
   );

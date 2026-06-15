@@ -7,7 +7,7 @@ const userImages = [user1, user2, user3, user3];
 
 export function ReviewsSection() {
   return (
-    <div className="absolute left-12 top-20 hidden xl:block">
+    <div className="absolute left-6 top-20 hidden xl:block">
       <div className="space-y-2">
         {/* Overlapping Avatar Stack */}
         <div className="flex items-center mb-3">

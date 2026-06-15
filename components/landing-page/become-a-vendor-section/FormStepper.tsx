@@ -21,5 +21,11 @@ export const VendorFormStepper = () => {
     },
   ];
 
-  return <AppStepper steps={steps} currentStep={currentStep} />;
+  return  <div className="hidden w-full lg:max-w-[280px] lg:flex-shrink-0 lg:block">
+      <AppStepper
+        steps={steps}
+        currentStep={currentStep}
+        
+      />
+    </div>;
 };

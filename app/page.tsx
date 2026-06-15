@@ -6,6 +6,7 @@ import ExclusiveBenefitsSection from "@/components/landing-page/exclusive-benefi
 import FAQSection from "@/components/landing-page/faq-section";
 import { HeroSection } from "@/components/landing-page/hero-section";
 import RatingAndReviewsSection from "@/components/landing-page/rating-review-section";
+import { AppTextMarquee } from "@/components/shared/AppTextMarquee";
 
 export default function LanndingPage() {
   return (

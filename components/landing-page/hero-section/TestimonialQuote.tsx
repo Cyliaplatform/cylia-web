@@ -5,7 +5,7 @@ export function TestimonialQuote() {
     <div
       className="
         absolute
-        right-[8%]
+        right-[2%]
         top-[10%]
         hidden
         max-w-75

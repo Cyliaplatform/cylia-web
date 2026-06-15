@@ -6,7 +6,7 @@ import RatingSummaryCard from "./RatingSummaryCard";
 
 export default function RatingAndReviewsSection() {
   return (
-    <section className="py-20 px-4">
+    <section className="py-20 px-4 my-16">
       <div className="max-w-6xl mx-auto flex flex-col gap-14">
 
         {/* ── Top heading ─────────────────────────────────── */}
