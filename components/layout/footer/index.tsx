@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Send } from 'lucide-react';
-import { AppInputField } from '@/components/shared/AppInput';
+import { AppInputField } from '@/components/shared/form/AppInput';
 import { AppButton } from '@/components/shared/AppButton';
 
 
