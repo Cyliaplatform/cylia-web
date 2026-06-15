@@ -8,6 +8,7 @@ import toast from 'react-hot-toast';
 import { AppButton } from '@/components/shared/AppButton';
 import { AppInputField } from '@/components/shared/form/AppInput';
 import { AppSwitch } from '@/components/shared/form/AppSwitch';
+import { AppSelect } from '@/components/shared/form/AppSelect';
 
 type Step3Values = Step3Data & {
   vehicle_name: string;
@@ -147,22 +148,31 @@ export const Step3Form: React.FC = () => {
                 requiredAsterisk
               />
 
-              <AppInputField
-                label="Ride type ID"
-                name="ride_type_id"
-                type="text"
-                placeholder="Enter ride type ID"
-                requiredAsterisk
-              />
+              <AppSelect
+  label="Ride type"
+  name="ride_type_id"
+  options={[
+    { value: '1', key: 'Motorcycle' },
+    { value: '2', key: 'Car' },
+    { value: '3', key: 'Van' },
+    { value: '4', key: 'Truck' },
+  ]}
+  placeholder="Enter ride type ID"
+  requiredAsterisk
+/>
 
-              <AppInputField
-                label="Zone ID"
-                name="zone_id"
-                type="text"
-                placeholder="Enter zone ID"
-                requiredAsterisk
-              />
-            </div>
+<AppSelect
+  label="Zone"
+  name="zone_id"
+  options={[
+    { value: '1', key: 'Zone 1' },
+    { value: '2', key: 'Zone 2' },
+    { value: '3', key: 'Zone 3' },
+    { value: '4', key: 'Zone 4' },
+  ]}
+  placeholder="Enter zone ID"
+  requiredAsterisk
+/>            </div>
 
             <div className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2">
               <AppSwitch name="is_four_wheeler" label="Is four wheeler" />

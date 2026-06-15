@@ -1,5 +1,6 @@
 import FeaturesSection from "@/components/landing-page/app-features-section";
 import BecomeRiderSection from "@/components/landing-page/become-a-rider-section";
+import BecomeVendorSection from "@/components/landing-page/become-a-vendor-section";
 import { DownloadAppSection } from "@/components/landing-page/download-apps-section";
 import ExclusiveBenefitsSection from "@/components/landing-page/exclusive-benefits-section";
 import FAQSection from "@/components/landing-page/faq-section";
@@ -12,6 +13,7 @@ export default function LanndingPage() {
     <HeroSection/>
     <DownloadAppSection/>
     <ExclusiveBenefitsSection/>
+    <BecomeVendorSection/>
     <FeaturesSection/>
     <BecomeRiderSection/>
     <FAQSection/>
