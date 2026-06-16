@@ -11,6 +11,7 @@ import { useVendorFormContext, type VendorStep1Data } from '@/contexts/become-a-
 import { AppSelect } from '@/components/shared/form/AppSelect';
 import { generatePassword } from '@/lib/utils';
 import { useGetZonesDropDown } from '@/hooks/api/become-a-rider';
+import { validateBecomeVendorStep1 } from '@/schemas/become-vendor-schema';
 
 const EMPTY_STEP1: VendorStep1Data = {
   name: '',
@@ -56,7 +57,12 @@ export const Step1Form = () => {
         </h2>
       </div>
 
-      <Formik initialValues={initialValues} enableReinitialize onSubmit={handleSubmit}>
+      <Formik
+        initialValues={initialValues}
+        enableReinitialize
+        validate={validateBecomeVendorStep1}
+        onSubmit={handleSubmit}
+      >
         {({ isSubmitting, setFieldValue, values }) => (
           <Form className="space-y-4 sm:space-y-5">
             <AppInputField

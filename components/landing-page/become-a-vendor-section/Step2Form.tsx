@@ -8,6 +8,7 @@ import { AppButton } from '@/components/shared/AppButton';
 import { AppFileInput } from '@/components/shared/AppFileInput';
 import { useVendorFormContext, type VendorStep2Data } from '@/contexts/become-a-vendor-form';
 import { useApplyForVendor } from '@/hooks/api/become-a-vendor';
+import { validateBecomeVendorStep2 } from '@/schemas/become-vendor-schema';
 import type { ApplyForVendorPayload } from '@/types/api/become-a-vendor.api';
 import { handleApiError } from '@/lib/toast-error';
 import { ApiErrorResponse } from '@/types/api/common';
@@ -94,7 +95,12 @@ const { mutateAsync: ApplyForVendor } = useApplyForVendor();
         </p>
       </div>
 
-      <Formik initialValues={initialValues} enableReinitialize onSubmit={handleSubmit}>
+      <Formik
+        initialValues={initialValues}
+        enableReinitialize
+        validate={validateBecomeVendorStep2}
+        onSubmit={handleSubmit}
+      >
         {({ isSubmitting }) => (
           <Form className="space-y-6">
             <div className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2">

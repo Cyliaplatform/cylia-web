@@ -17,6 +17,7 @@ import {
   useGetVehicleTypesDropDown,
   useGetZonesDropDown,
 } from "@/hooks/api/become-a-rider";
+import { validateBecomeRiderStep3 } from "@/schemas/become-rider-schema";
 import { BecomeRiderPayload } from "@/types/api/become-a-rider.api";
 import { handleApiError } from "@/lib/toast-error";
 import { ApiErrorResponse } from "@/types/api/common";
@@ -159,6 +160,7 @@ export const Step3Form: React.FC = () => {
       <Formik
         initialValues={initialValues}
         enableReinitialize
+        validate={validateBecomeRiderStep3}
         onSubmit={handleSubmit}
       >
         {({ isSubmitting, setFieldValue, values }) => (

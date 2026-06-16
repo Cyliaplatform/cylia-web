@@ -9,6 +9,7 @@ import {
   useDriverFormContext,
 } from "@/contexts/become-a-rider-form";
 import { generatePassword } from "@/lib/utils";
+import { validateBecomeRiderStep1 } from "@/schemas/become-rider-schema";
 import { Form, Formik } from "formik";
 import * as React from "react";
 
@@ -46,7 +47,7 @@ export const Step1Form: React.FC = () => {
       <Formik
         initialValues={initialValues}
         enableReinitialize
-        // validationSchema={DriverFromStep1Schema(tSchema)}
+        validate={validateBecomeRiderStep1}
         onSubmit={handleSubmit}
       >
         {({ isSubmitting, setFieldValue, values }) => (

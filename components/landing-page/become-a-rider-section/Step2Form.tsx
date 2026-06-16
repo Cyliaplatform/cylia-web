@@ -4,6 +4,7 @@ import { ArrowLeft } from 'lucide-react';
 import { AppButton } from '@/components/shared/AppButton';
 import { AppFileInput } from '@/components/shared/AppFileInput';
 import { useDriverFormContext } from '@/contexts/become-a-rider-form';
+import { validateBecomeRiderStep2 } from '@/schemas/become-rider-schema';
 import { Form, Formik } from 'formik';
 import * as React from 'react';
 
@@ -64,7 +65,7 @@ export const Step2Form: React.FC = () => {
       <Formik
         initialValues={initialValues}
         enableReinitialize // ← important
-        // validationSchema={DriverFormStep2Schema(tSchema)}
+        validate={validateBecomeRiderStep2}
         onSubmit={handleSubmit}
       >
         {({ isSubmitting }) => (
