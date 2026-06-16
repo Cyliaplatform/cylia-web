@@ -218,7 +218,6 @@ export const AppFileInput: React.FC<AppFileInputProps> = ({
 
   const inputId = React.useId();
   const [isDragging, setIsDragging] = React.useState(false);
-  const [previewSrc, setPreviewSrc] = React.useState<string | null>(null);
   const [progress, setProgress] = React.useState<number>(0);
   const [isReading, setIsReading] = React.useState(false);
   const [open, setOpen] = React.useState(false);
@@ -229,40 +228,27 @@ export const AppFileInput: React.FC<AppFileInputProps> = ({
     | string
     | null
     | undefined;
+  const filePreviewUrl = React.useMemo(() => {
+    if (!(currentValue instanceof File)) {
+      return null;
+    }
+
+    return URL.createObjectURL(currentValue);
+  }, [currentValue]);
 
   React.useEffect(() => {
-    const val = currentValue;
-    if (val instanceof File) {
-      const url = URL.createObjectURL(val);
-      setPreviewSrc(url);
-      setIsReading(false);
-      setProgress(100);
+    return () => {
+      if (filePreviewUrl) {
+        URL.revokeObjectURL(filePreviewUrl);
+      }
+    };
+  }, [filePreviewUrl]);
 
-      return () => {
-        URL.revokeObjectURL(url);
-      };
-    }
-
-    if (typeof val === 'string' && val.trim()) {
-      setPreviewSrc(val);
-      setIsReading(false);
-      setProgress(100);
-      return;
-    }
-
-    if (!val && previewUrl) {
-      setPreviewSrc(previewUrl);
-      setIsReading(false);
-      setProgress(100);
-      return;
-    }
-
-    if (!val) {
-      setPreviewSrc(null);
-      setProgress(0);
-      setIsReading(false);
-    }
-  }, [currentValue, previewUrl]);
+  const previewSrc =
+    filePreviewUrl ??
+    (typeof currentValue === 'string' && currentValue.trim()
+      ? currentValue
+      : previewUrl ?? null);
 
   const acceptAttr = acceptTypes.join(',');
   const currentFileName =
@@ -303,7 +289,6 @@ export const AppFileInput: React.FC<AppFileInputProps> = ({
       }
     };
     reader.onload = () => {
-      setPreviewSrc(reader.result as string);
       setIsReading(false);
       setProgress(100);
     };
@@ -351,7 +336,6 @@ export const AppFileInput: React.FC<AppFileInputProps> = ({
 
   const clearFile = () => {
     formik.setFieldValue(name, null);
-    setPreviewSrc(null);
     setProgress(0);
     setIsReading(false);
     setOpen(false);
