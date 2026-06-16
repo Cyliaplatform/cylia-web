@@ -28,7 +28,7 @@ export const Step2Form: React.FC = () => {
     () => formData.step2 ?? EMPTY_STEP2,
     [formData.step2],
   );
-const { mutateAsync: ApplyForVendor } = useApplyForVendor();
+const { mutateAsync: ApplyForVendor, isPending } = useApplyForVendor();
   const handleSubmit = async (
     values: VendorStep2Data,
     { setSubmitting }: { setSubmitting: (s: boolean) => void },
@@ -152,8 +152,8 @@ const { mutateAsync: ApplyForVendor } = useApplyForVendor();
               </AppButton>
               <AppButton
                 type="submit"
-                isLoading={isSubmitting}
-                disabled={isSubmitting}
+                isLoading={isSubmitting || isPending}
+                disabled={isSubmitting || isPending}
                 className="w-full rounded-[12px] px-6 sm:mt-4 sm:w-auto sm:min-w-[160px] sm:px-10 md:px-12"
               >
                 Submit

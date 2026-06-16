@@ -52,7 +52,7 @@ export const Step3Form: React.FC = () => {
 
   const { data: zonesData } = useGetZonesDropDown();
   const { data: vehicleType } = useGetVehicleTypesDropDown();
-  const { mutateAsync: ApplyForRider } = useApplyForRider();
+  const { mutateAsync: ApplyForRider, isPending } = useApplyForRider();
 
   const zoneOptions = React.useMemo(
     () =>
@@ -249,8 +249,8 @@ export const Step3Form: React.FC = () => {
               </AppButton>
               <AppButton
                 type="submit"
-                isLoading={isSubmitting}
-                disabled={isSubmitting}
+                isLoading={isSubmitting || isPending}
+                disabled={isSubmitting || isPending}
                 className="w-full rounded-[12px] px-6 sm:mt-4 sm:w-auto sm:min-w-[160px] sm:px-10 md:px-12"
               >
                 Submit
