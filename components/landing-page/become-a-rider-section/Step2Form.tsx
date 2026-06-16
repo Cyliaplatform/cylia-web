@@ -14,7 +14,7 @@ type Step2Values = {
   national_id_passport_back: File | null;
   vehicle_registration_front: File | null;
   vehicle_registration_back: File | null;
-  company_commercial_registration: File | null;
+  profile_image: File | null;
 };
 
 const EMPTY_STEP2: Step2Values = {
@@ -24,7 +24,7 @@ const EMPTY_STEP2: Step2Values = {
   national_id_passport_back: null,
   vehicle_registration_front: null,
   vehicle_registration_back: null,
-  company_commercial_registration: null,
+  profile_image: null,
 };
 
 export const Step2Form: React.FC = () => {
@@ -69,6 +69,14 @@ export const Step2Form: React.FC = () => {
       >
         {({ isSubmitting }) => (
           <Form className="space-y-6">
+              
+              <AppFileInput
+                name="profile_image"
+                label="Profile"
+                requiredAsterisk
+                previewHeight={120}
+              />
+            
             <div className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2">
               <AppFileInput
                 name="driver_license_front"
@@ -114,15 +122,7 @@ export const Step2Form: React.FC = () => {
               />
             </div>
 
-            <div className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2">
-              <AppFileInput
-                name="company_commercial_registration"
-                label="Company commercial registration"
-                requiredAsterisk
-                previewHeight={120}
-              />
-              <div className="hidden md:block" />
-            </div>
+          
 
             <div className="flex flex-col-reverse gap-3 border-t pt-4 sm:flex-row sm:items-center sm:justify-end">
               <AppButton

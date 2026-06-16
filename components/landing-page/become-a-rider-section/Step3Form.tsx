@@ -1,14 +1,25 @@
-'use client';
+"use client";
 
-import * as React from 'react';
-import { Step3Data, useDriverFormContext } from '@/contexts/become-a-rider-form';
-import { Form, Formik } from 'formik';
-import { ArrowLeft } from 'lucide-react';
-import toast from 'react-hot-toast';
-import { AppButton } from '@/components/shared/AppButton';
-import { AppInputField } from '@/components/shared/form/AppInput';
-import { AppSwitch } from '@/components/shared/form/AppSwitch';
-import { AppSelect } from '@/components/shared/form/AppSelect';
+import * as React from "react";
+import {
+  Step3Data,
+  useDriverFormContext,
+} from "@/contexts/become-a-rider-form";
+import { Form, Formik } from "formik";
+import { ArrowLeft } from "lucide-react";
+import toast from "react-hot-toast";
+import { AppButton } from "@/components/shared/AppButton";
+import { AppInputField } from "@/components/shared/form/AppInput";
+import { AppSwitch } from "@/components/shared/form/AppSwitch";
+import { AppSelect } from "@/components/shared/form/AppSelect";
+import {
+  useApplyForRider,
+  useGetVehicleTypesDropDown,
+  useGetZonesDropDown,
+} from "@/hooks/api/become-a-rider";
+import { BecomeRiderPayload } from "@/types/api/become-a-rider.api";
+import { handleApiError } from "@/lib/toast-error";
+import { ApiErrorResponse } from "@/types/api/common";
 
 type Step3Values = Step3Data & {
   vehicle_name: string;
@@ -21,12 +32,12 @@ const EMPTY_STEP3: Step3Values = {
   is_four_wheeler: false,
   air_conditioning: false,
   no_cosmetic_damage: false,
-  ride_type_id: '',
-  zone_id: '',
-  licenseNumber: '',
-  vehicle_name: '',
-  vehicle_colour: '',
-  vehicle_no: '',
+  vehicle_type_id: "",
+  zone_id: "",
+  licenseNumber: "",
+  vehicle_name: "",
+  vehicle_colour: "",
+  vehicle_no: "",
 };
 
 export const Step3Form: React.FC = () => {
@@ -38,19 +49,40 @@ export const Step3Form: React.FC = () => {
     [formData.step3],
   );
 
+  const { data: zonesData } = useGetZonesDropDown();
+  const { data: vehicleType } = useGetVehicleTypesDropDown();
+  const { mutateAsync: ApplyForRider } = useApplyForRider();
+
+  const zoneOptions = React.useMemo(
+    () =>
+      zonesData?.map((zone) => ({
+        value: String(zone.id),
+        key: zone.title,
+      })) ?? [],
+    [zonesData],
+  );
+  const vehicleOptions = React.useMemo(
+    () =>
+      vehicleType?.map((zone) => ({
+        value: String(zone.id),
+        key: zone.name,
+      })) ?? [],
+    [vehicleType],
+  );
   const handleSubmit = async (
     values: Step3Values,
     { setSubmitting }: { setSubmitting: (s: boolean) => void },
   ) => {
+    
     try {
       setSubmitting(true);
 
       if (!formData.step1) {
-        toast.error('Complete step 1 before submitting.');
+        toast.error("Complete step 1 before submitting.");
         return;
       }
       if (!formData.step2) {
-        toast.error('Complete step 2 before submitting.');
+        toast.error("Complete step 2 before submitting.");
         return;
       }
 
@@ -61,19 +93,53 @@ export const Step3Form: React.FC = () => {
         !formData.step2.national_id_passport_back ||
         !formData.step2.vehicle_registration_front ||
         !formData.step2.vehicle_registration_back ||
-        !formData.step2.company_commercial_registration;
+        !formData.step2.profile_image;
 
       if (missingFile) {
-        toast.error('Upload all required documents before submitting.');
+        toast.error("Upload all required documents before submitting.");
         return;
       }
 
       setStep3Data(values);
-      toast.success('Rider application submitted successfully.');
+
+      const step1Payload = {
+        name: formData.step1.name,
+        email: formData.step1.email,
+        phone: formData.step1.phone,
+        password: formData.step1.password,
+      };
+      const {
+        profile_image,
+        driver_license_front,
+        driver_license_back,
+        national_id_passport_front,
+        national_id_passport_back,
+        vehicle_registration_front,
+        vehicle_registration_back,
+      } = formData.step2;
+
+      const payload: BecomeRiderPayload = {
+        ...step1Payload,
+        ...values,
+        model_year_limit: values.model_year_limit ?? 0,
+        profile_image: profile_image ?? undefined,
+        driver_license_front: driver_license_front ?? undefined,
+        driver_license_back: driver_license_back ?? undefined,
+        national_id_passport_front:
+          national_id_passport_front ?? undefined,
+        national_id_passport_back:
+          national_id_passport_back ?? undefined,
+        vehicle_registration_front:
+          vehicle_registration_front ?? undefined,
+        vehicle_registration_back:
+          vehicle_registration_back ?? undefined,
+      };
+
+     const response =  await ApplyForRider(payload);
+      toast.success(response.message  || "Rider application submitted successfully.");
       resetForm();
     } catch (error) {
-      console.error('Error submitting step 3:', error);
-      toast.error('Something went wrong while submitting the application.');
+      handleApiError(error as ApiErrorResponse)
     } finally {
       setSubmitting(false);
     }
@@ -106,16 +172,15 @@ export const Step3Form: React.FC = () => {
                 placeholder="Enter model year"
                 onChange={(e) => {
                   const v = e.target.value;
-                  setFieldValue('model_year_limit', v === '' ? '' : Number(v));
+                  setFieldValue("model_year_limit", v === "" ? "" : Number(v));
                 }}
                 value={
                   values.model_year_limit === null ||
                   values.model_year_limit === undefined
-                    ? ''
+                    ? ""
                     : String(values.model_year_limit)
                 }
               />
-
               <AppInputField
                 label="License number"
                 name="licenseNumber"
@@ -123,7 +188,6 @@ export const Step3Form: React.FC = () => {
                 placeholder="Enter license number"
                 requiredAsterisk
               />
-
               <AppInputField
                 label="Vehicle name"
                 name="vehicle_name"
@@ -131,7 +195,6 @@ export const Step3Form: React.FC = () => {
                 placeholder="Enter vehicle name"
                 requiredAsterisk
               />
-
               <AppInputField
                 label="Vehicle color"
                 name="vehicle_colour"
@@ -139,7 +202,6 @@ export const Step3Form: React.FC = () => {
                 placeholder="Enter vehicle color"
                 requiredAsterisk
               />
-
               <AppInputField
                 label="Vehicle number"
                 name="vehicle_no"
@@ -147,40 +209,26 @@ export const Step3Form: React.FC = () => {
                 placeholder="Enter vehicle number"
                 requiredAsterisk
               />
-
               <AppSelect
-  label="Ride type"
-  name="ride_type_id"
-  options={[
-    { value: '1', key: 'Motorcycle' },
-    { value: '2', key: 'Car' },
-    { value: '3', key: 'Van' },
-    { value: '4', key: 'Truck' },
-  ]}
-  placeholder="Enter ride type ID"
-  requiredAsterisk
-/>
-
-<AppSelect
-  label="Zone"
-  name="zone_id"
-  options={[
-    { value: '1', key: 'Zone 1' },
-    { value: '2', key: 'Zone 2' },
-    { value: '3', key: 'Zone 3' },
-    { value: '4', key: 'Zone 4' },
-  ]}
-  placeholder="Enter zone ID"
-  requiredAsterisk
-/>            </div>
+                label="Vehicle Type"
+                name="vehicle_type_id"
+                options={vehicleOptions}
+                placeholder="Enter vehicle type"
+                requiredAsterisk
+              />
+              <AppSelect
+                label="Zone"
+                name="zone_id"
+                options={zoneOptions}
+                placeholder="Enter zone ID"
+                requiredAsterisk
+              />{" "}
+            </div>
 
             <div className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2">
               <AppSwitch name="is_four_wheeler" label="Is four wheeler" />
               <AppSwitch name="air_conditioning" label="Air conditioning" />
-              <AppSwitch
-                name="no_cosmetic_damage"
-                label="No cosmetic damage"
-              />
+              <AppSwitch name="no_cosmetic_damage" label="No cosmetic damage" />
             </div>
 
             <div className="flex flex-col-reverse gap-3 border-t pt-4 sm:flex-row sm:items-center sm:justify-end">

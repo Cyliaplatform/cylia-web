@@ -9,6 +9,7 @@ import { AppPhoneField } from '@/components/shared/form/AppPhoneInput';
 import { AppSwitch } from '@/components/shared/form/AppSwitch';
 import { useVendorFormContext, type VendorStep1Data } from '@/contexts/become-a-vendor-form';
 import { AppSelect } from '@/components/shared/form/AppSelect';
+import { generatePassword } from '@/lib/utils';
 
 const EMPTY_STEP1: VendorStep1Data = {
   name: '',
@@ -21,15 +22,7 @@ const EMPTY_STEP1: VendorStep1Data = {
   changePasswordAllowed: false,
 };
 
-const generatePassword = (length: number) => {
-  const charset =
-    'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%^&*';
 
-  return Array.from({ length }, () => {
-    const index = Math.floor(Math.random() * charset.length);
-    return charset[index];
-  }).join('');
-};
 
 export const Step1Form = () => {
   const { nextStep, setStep1Data, formData } = useVendorFormContext();

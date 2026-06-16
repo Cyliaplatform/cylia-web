@@ -6,6 +6,8 @@ export interface Step1Data {
   name: string;
   email: string;
   phone: string;
+  autoGeneratePassword:boolean;
+  password:string
 }
 
 export interface Step2Data {
@@ -15,7 +17,7 @@ export interface Step2Data {
   national_id_passport_back: File | null;
   vehicle_registration_front: File | null;
   vehicle_registration_back: File | null;
-  company_commercial_registration: File | null;
+  profile_image: File | null;
 }
 
 export interface Step3Data {
@@ -23,7 +25,7 @@ export interface Step3Data {
   is_four_wheeler: boolean;
   air_conditioning: boolean;
   no_cosmetic_damage: boolean;
-  ride_type_id: string;
+  vehicle_type_id: string;
   zone_id: string;
   licenseNumber: string;
 }

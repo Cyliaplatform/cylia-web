@@ -5,6 +5,8 @@ import AppHeader from "@/components/layout/header";
 import { AppFooter } from "@/components/layout/footer";
 import { DriverFormProvider } from "@/contexts/become-a-rider-form";
 import { VendorFormProvider } from "@/contexts/become-a-vendor-form";
+import { QueryProvider } from "@/components/provider/QueryProvider";
+import { Toaster } from "react-hot-toast";
 const inter = Inter({
   subsets: ["latin"],
 });
@@ -33,7 +35,7 @@ export default function RootLayout({
         <AppHeader />
         <DriverFormProvider>
           {" "}
-          <VendorFormProvider>{children}</VendorFormProvider>
+          <VendorFormProvider> <QueryProvider>{children}</QueryProvider></VendorFormProvider> <Toaster />
         </DriverFormProvider>
         <AppFooter />
       </body>
