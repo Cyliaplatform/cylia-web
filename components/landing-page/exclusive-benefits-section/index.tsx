@@ -4,7 +4,7 @@ import sticker from "@/public/images/stickers/white-main-sticker.png";
 
 export default function ExclusiveBenefitsSection() {
   return (
-    <section className="relative overflow-hidden bg-[#111827] py-24 my-16">
+    <section className="relative overflow-hidden bg-[#111827] py-36 my-16">
       {/* Decorative Top Border Pattern */}
       <div className="absolute left-0 top-0 h-px w-full bg-white/10" />
 

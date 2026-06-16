@@ -63,10 +63,11 @@ export function DownloadAppCard({
             
           "
         >
-          <Image
-            src={qr}
+          <img
+            src={qr.src}
             alt={`${title} QR`}
             className="h-[120px] w-[120px]"
+           
           />
         </div>
       </div>
@@ -86,10 +87,11 @@ export function DownloadAppCard({
           bg-white
         "
       >
-        <Image
-          src={logo}
+        <img
+          src={logo.src}
           alt={title}
           className="h-14 w-12 object-contain"
+         
         />
       </div>
     </div>
