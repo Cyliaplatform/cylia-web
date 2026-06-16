@@ -10,6 +10,7 @@ import { AppSwitch } from '@/components/shared/form/AppSwitch';
 import { useVendorFormContext, type VendorStep1Data } from '@/contexts/become-a-vendor-form';
 import { AppSelect } from '@/components/shared/form/AppSelect';
 import { generatePassword } from '@/lib/utils';
+import { useGetZonesDropDown } from '@/hooks/api/become-a-rider';
 
 const EMPTY_STEP1: VendorStep1Data = {
   name: '',
@@ -31,7 +32,17 @@ export const Step1Form = () => {
     () => formData.step1 ?? EMPTY_STEP1,
     [formData.step1],
   );
+  const { data: zonesData } = useGetZonesDropDown();
+ 
 
+  const zoneOptions = React.useMemo(
+    () =>
+      zonesData?.map((zone) => ({
+        value: String(zone.id),
+        key: zone.title,
+      })) ?? [],
+    [zonesData],
+  );
   const handleSubmit = (values: VendorStep1Data) => {
     setStep1Data(values);
     nextStep();
@@ -70,18 +81,13 @@ export const Step1Form = () => {
               placeholder="Enter phone number"
               requiredAsterisk
             />
+          
 
             <AppSelect
-              label="Zone or city"
+              label="Zone"
               name="zone_id"
-              options={[
-                { key: 'Zone 1', value: 'zone_1' },
-                { key: 'Zone 2', value: 'zone_2' },
-                { key: 'Zone 3', value: 'zone_3' },
-                { key: 'Zone 4', value: 'zone_4' },
-                { key: 'Zone 5', value: 'zone_5' },
-              ]}
-              placeholder="Enter zone or city"
+              options={zoneOptions}
+              placeholder="Enter zone"
               requiredAsterisk
             />
 

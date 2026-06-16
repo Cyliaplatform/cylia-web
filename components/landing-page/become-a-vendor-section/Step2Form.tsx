@@ -7,6 +7,10 @@ import toast from 'react-hot-toast';
 import { AppButton } from '@/components/shared/AppButton';
 import { AppFileInput } from '@/components/shared/AppFileInput';
 import { useVendorFormContext, type VendorStep2Data } from '@/contexts/become-a-vendor-form';
+import { useApplyForVendor } from '@/hooks/api/become-a-vendor';
+import type { ApplyForVendorPayload } from '@/types/api/become-a-vendor.api';
+import { handleApiError } from '@/lib/toast-error';
+import { ApiErrorResponse } from '@/types/api/common';
 
 const EMPTY_STEP2: VendorStep2Data = {
   logo: null,
@@ -23,7 +27,7 @@ export const Step2Form: React.FC = () => {
     () => formData.step2 ?? EMPTY_STEP2,
     [formData.step2],
   );
-
+const { mutateAsync: ApplyForVendor } = useApplyForVendor();
   const handleSubmit = async (
     values: VendorStep2Data,
     { setSubmitting }: { setSubmitting: (s: boolean) => void },
@@ -37,11 +41,43 @@ export const Step2Form: React.FC = () => {
         return;
       }
 
+      const missingFile =
+        !values.logo ||
+        !values.business_license_front ||
+        !values.business_license_back ||
+        !values.national_id_passport_front ||
+        !values.national_id_passport_back;
+
+      if (missingFile) {
+        toast.error('Upload all required documents before submitting.');
+        return;
+      }
+
+      const payload: ApplyForVendorPayload = {
+        name: formData.step1.name,
+        email: formData.step1.email,
+        phone: formData.step1.phone,
+        password: formData.step1.password,
+        zone_id: formData.step1.zone_id,
+        allow_password_change: formData.step1.changePasswordAllowed ?? false,
+        vendorImage: values.logo ?? undefined,
+        business_liscence_front_file:
+          values.business_license_front ?? undefined,
+        business_liscence_back_file:
+          values.business_license_back ?? undefined,
+        national_id_front_file:
+          values.national_id_passport_front ?? undefined,
+        national_id_back_file:
+          values.national_id_passport_back ?? undefined,
+        business_trademark_file: values.logo ?? undefined,
+      };
+
+      await ApplyForVendor(payload);
+
       toast.success('Vendor application submitted successfully.');
       resetForm();
     } catch (error) {
-      console.error('Error submitting step 2:', error);
-      toast.error('Something went wrong while submitting the application.');
+       handleApiError(error as ApiErrorResponse)
     } finally {
       setSubmitting(false);
     }
