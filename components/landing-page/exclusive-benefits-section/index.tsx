@@ -1,3 +1,4 @@
+import Image from "next/image";
 import BenefitCard from "./BenefitCard";
 import { benefitCards } from "./data";
 import sticker from "@/public/images/stickers/white-main-sticker.png";
@@ -25,8 +26,8 @@ export default function ExclusiveBenefitsSection() {
               Exclusive
               <span className="relative inline-block">
                 Benefits
-                <img
-                  src={sticker.src}
+                <Image
+                  src={sticker}
                   alt=""
                   className="absolute -right-6 top-1 h-5 w-5 rotate-12"
                 />

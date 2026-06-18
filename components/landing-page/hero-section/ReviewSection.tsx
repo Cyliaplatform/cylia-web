@@ -1,3 +1,4 @@
+import Image from "next/image";
 // ReviewsSection.tsx
 import user1 from "@/public/images/review-users/user1.png";
 import user2 from "@/public/images/review-users/user2.png";
@@ -26,14 +27,13 @@ export function ReviewsSection() {
                 flexShrink: 0,
               }}
             >
-              <img
-                src={src.src}
+              <Image
+                src={src}
                 alt={`User ${index + 1}`}
+                fill
+                sizes="48px"
                 style={{
-                  width: "100%",
-                  height: "100%",
                   objectFit: "cover",
-                  display: "block",
                 }}
               />
             </div>
