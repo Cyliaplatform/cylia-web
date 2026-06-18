@@ -9,16 +9,27 @@ import RatingAndReviewsSection from "@/components/landing-page/rating-review-sec
 
 export default function LanndingPage() {
   return (
-   <div className=" space-y-8">
-    <HeroSection/>
-    <DownloadAppSection/>
-    <ExclusiveBenefitsSection/>
-    <BecomeVendorSection/>
-    <FeaturesSection/>
-    <BecomeRiderSection/>
-    <FAQSection/>
-    <RatingAndReviewsSection/>
-   </div>
-   
+    <div className="space-y-8">
+      <HeroSection />
+      <section id="download-app">
+        <DownloadAppSection />
+      </section>
+      <ExclusiveBenefitsSection />
+      <section id="become-merchant">
+        <BecomeVendorSection />
+      </section>
+      <section id="features">
+        <FeaturesSection />
+      </section>
+      <section id="become-rider">
+        <BecomeRiderSection />
+      </section>
+      <section id="how-it-works">
+        <FAQSection />
+      </section>
+      <section id="testimonials">
+        <RatingAndReviewsSection />
+      </section>
+    </div>
   );
 }

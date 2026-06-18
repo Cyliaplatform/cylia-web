@@ -10,7 +10,7 @@ import applelogo from '@/public/images/logo/apple.png';
 
 export function DownloadAppSection() {
   return (
-    <section className="py-16 lg:py-24 my-14">
+    <section  className="py-16 lg:py-24 my-14 ">
       <div className="container mx-auto px-4 sm:px-6 lg:px-16">
         <div
           className="

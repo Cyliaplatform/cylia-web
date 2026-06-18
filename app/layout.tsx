@@ -34,8 +34,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <AppHeader />
         <DriverFormProvider>
-          {" "}
-          <VendorFormProvider> <QueryProvider>{children}</QueryProvider></VendorFormProvider> <Toaster />
+         <VendorFormProvider> <QueryProvider>{children}</QueryProvider></VendorFormProvider> <Toaster />
         </DriverFormProvider>
         <AppFooter />
       </body>

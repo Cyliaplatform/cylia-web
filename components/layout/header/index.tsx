@@ -1,99 +1,136 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import Image from "next/image";
+import { usePathname, useRouter } from "next/navigation";
 import { Menu, X, ArrowRight } from "lucide-react";
 
 import { AppButton } from "@/components/shared/AppButton";
-import logo from "@/public/images/logo/cylia-logo.png"
+import logo from "@/public/images/logo/cylia-logo.png";
 
 export default function AppHeader() {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+  const router = useRouter();
 
   const links = [
-    "Features",
-    "How It Works",
-    "About Us",
-    "Testimonial",
-    "Blog",
+    { label: "Features", href: "/#features" },
+    { label: "How It Works", href: "/#how-it-works" },
+    { label: "Become Merchant", href: "/#become-merchant" },
+    { label: "Testimonials", href: "/#testimonials" },
+    { label: "Become Rider", href: "/#become-rider" },
   ];
+
+  const handleNavigate = (href: string) => {
+    const targetId = href.split("#")[1];
+    const isLandingPage = pathname === "/";
+
+    if (!targetId) {
+      setOpen(false);
+      return;
+    }
+
+    if (!isLandingPage) {
+      router.push(href);
+      setOpen(false);
+      return;
+    }
+
+    const target = document.getElementById(targetId);
+
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+      window.history.pushState(null, "", href);
+    }
+
+    setOpen(false);
+  };
 
   return (
     <>
       {/* Header */}
-      <header className="container mx-auto mt-6 px-14 sm:mt-8 lg:mt-10">
+       <header className="container mx-auto mt-6 px-14 sm:mt-8 lg:mt-10">
         <div className="flex h-18 items-center justify-between rounded-full bg-dark p-2">
           {/* Logo */}
-          <div className="flex items-center gap-2 sm:gap-3">
-            <div className="overflow-hidden rounded-full bg-white">
-              <Image
-                src={logo}
-                alt="Food Delivery"
-                width={52}
-                height={52}
-                priority
-                className="h-10 w-10 object-cover sm:h-13 sm:w-13"
-              />
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="overflow-hidden rounded-full bg-white">
+                <Image
+                  src={logo}
+                  alt="Food Delivery"
+                  width={52}
+                  height={52}
+                  priority
+                  className="h-10 w-10 object-cover sm:h-13 sm:w-13"
+                />
+              </div>
+
+              <span className="hidden text-base font-semibold text-white sm:block lg:text-xl">
+                Food Delivery.
+              </span>
             </div>
 
-            <span className="hidden text-base font-semibold text-white sm:block lg:text-xl">
-              Food Delivery.
-            </span>
-          </div>
+            {/* Desktop Nav */}
+            <nav className="hidden items-center gap-6 lg:flex xl:gap-10">
+              {links.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={(event) => {
+                    if (pathname === "/") {
+                      event.preventDefault();
+                      handleNavigate(item.href);
+                    }
+                  }}
+                  className="relative text-sm text-white transition hover:text-primary"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
 
-          {/* Desktop Nav */}
-          <nav className="hidden items-center gap-6 lg:flex xl:gap-10">
-            {links.map((item) => (
-              <a
-                key={item}
-                href="#"
-                className="relative text-sm text-white transition hover:text-primary"
+            {/* Actions */}
+            <div className="flex items-center gap-2">
+              <AppButton
+                onClick={() => handleNavigate("/#download-app")}
+                className="
+                  hidden
+                  h-10
+                  rounded-full
+                  bg-primary
+                  px-5
+                  text-sm
+                  font-semibold
+                  text-primary-purple
+                  transition
+                  hover:scale-[1.02]
+
+                  sm:flex
+                  sm:h-12
+                  sm:px-6
+
+                  lg:h-13
+                  lg:px-8
+                "
               >
-                {item}
-              </a>
-            ))}
-          </nav>
+                Get the App
+              </AppButton>
 
-          {/* Actions */}
-          <div className="flex items-center gap-2">
-            <AppButton
-              className="
-                hidden
-                h-10
-                rounded-full
-                bg-primary
-                px-5
-                text-sm
-                font-semibold
-                text-primary-purple
-                transition
-                hover:scale-[1.02]
-
-                sm:flex
-                sm:h-12
-                sm:px-6
-
-                lg:h-13
-                lg:px-8
-              "
-            >
-              Get the App
-            </AppButton>
-
-            {/* Mobile Hamburger */}
-            <button
-              onClick={() => setOpen(true)}
-              className="
-                flex h-11 w-11 items-center justify-center
-                rounded-full
-                bg-white/10
-                text-white
-                backdrop-blur
-                lg:hidden
-              "
-            >
-              <Menu size={22} />
-            </button>
+              {/* Mobile Hamburger */}
+              <button
+                onClick={() => setOpen(true)}
+                className="
+                  flex h-11 w-11 items-center justify-center
+                  rounded-full
+                  bg-white/10
+                  text-white
+                  backdrop-blur
+                  lg:hidden
+                "
+              >
+                <Menu size={22} />
+              </button>
+           
           </div>
         </div>
       </header>
@@ -164,10 +201,18 @@ export default function AppHeader() {
           {/* Links */}
           <nav className="mt-10 flex flex-col px-4">
             {links.map((item, index) => (
-              <a
-                key={item}
-                href="#"
-                onClick={() => setOpen(false)}
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={(event) => {
+                  if (pathname === "/") {
+                    event.preventDefault();
+                    handleNavigate(item.href);
+                    return;
+                  }
+
+                  setOpen(false);
+                }}
                 className="
                   group
                   flex items-center justify-between
@@ -186,7 +231,7 @@ export default function AppHeader() {
                     0{index + 1}
                   </span>
 
-                  {item}
+                  {item.label}
                 </span>
 
                 <ArrowRight
@@ -198,7 +243,7 @@ export default function AppHeader() {
                     group-hover:opacity-100
                   "
                 />
-              </a>
+              </Link>
             ))}
           </nav>
 
@@ -209,7 +254,10 @@ export default function AppHeader() {
                 Download our app and get food faster.
               </p>
 
-              <AppButton className="w-full rounded-full bg-primary py-3 font-semibold text-primary-purple">
+              <AppButton
+                onClick={() => handleNavigate("/#download-app")}
+                className="w-full rounded-full bg-primary py-3 font-semibold text-primary-purple"
+              >
                 Get the App
               </AppButton>
             </div>
