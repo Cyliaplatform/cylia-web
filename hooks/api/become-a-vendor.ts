@@ -1,11 +1,12 @@
 import Axios from "@/config/axios";
-import { VehicleType, Zone } from "@/types/api/become-a-rider.api";
 import {
   ApplyForVendorPayload,
   ApplyForVendorResponse,
 } from "@/types/api/become-a-vendor.api";
 import { ApiErrorResponse } from "@/types/api/common";
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
+import { useQuery, UseQueryOptions } from "@tanstack/react-query";
+import { VendorRegistrationDetails } from "@/contexts/become-a-vendor-form";
 
 export const useApplyForVendor = (
   options?: UseMutationOptions<
@@ -77,6 +78,68 @@ export const useApplyForVendor = (
       return res.data;
     },
 
+    ...options,
+  });
+};
+
+export const useUpdateVendorPublic = (
+  options?: UseMutationOptions<
+    ApplyForVendorResponse,
+    ApiErrorResponse,
+    { vendorId: string; formData: FormData }
+  >,
+) => {
+  return useMutation<
+    ApplyForVendorResponse,
+    ApiErrorResponse,
+    { vendorId: string; formData: FormData }
+  >({
+    mutationFn: async ({ vendorId, formData }) => {
+      const res = await Axios.patch<ApplyForVendorResponse>(
+        `/apps/deliveries/vendors/public-update/${vendorId}`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        },
+      );
+      return res.data;
+    },
+    ...options,
+  });
+};
+
+export const useGetVendorRegistrationDetailsByUser = (
+  userId?: string,
+  options?: UseQueryOptions<VendorRegistrationDetails, ApiErrorResponse>,
+) => {
+  return useQuery<VendorRegistrationDetails, ApiErrorResponse>({
+    queryKey: ["vendor-registration-details", userId],
+    queryFn: async () => {
+      const res = await Axios.get<VendorRegistrationDetails>(
+        `/apps/deliveries/vendors/registration-details/by-user/${userId}`,
+      );
+      return res.data;
+    },
+    enabled: Boolean(userId),
+    ...options,
+  });
+};
+
+export const useGetVendorRegistrationDetailsByVendor = (
+  vendorId?: string,
+  options?: UseQueryOptions<VendorRegistrationDetails, ApiErrorResponse>,
+) => {
+  return useQuery<VendorRegistrationDetails, ApiErrorResponse>({
+    queryKey: ["vendor-registration-details-by-vendor", vendorId],
+    queryFn: async () => {
+      const res = await Axios.get<VendorRegistrationDetails>(
+        `/apps/deliveries/vendors/registration-details/by-vendor/${vendorId}`,
+      );
+      return res.data;
+    },
+    enabled: Boolean(vendorId),
     ...options,
   });
 };

@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useSearchParams } from "next/navigation";
 import {
   Step3Data,
   useDriverFormContext,
@@ -14,6 +15,7 @@ import { AppSwitch } from "@/components/shared/form/AppSwitch";
 import { AppSelect } from "@/components/shared/form/AppSelect";
 import {
   useApplyForRider,
+  useUpdateRiderPublic,
   useGetVehicleTypesDropDown,
   useGetZonesDropDown,
 } from "@/hooks/api/become-a-rider";
@@ -44,6 +46,9 @@ const EMPTY_STEP3: Step3Values = {
 export const Step3Form: React.FC = () => {
   const { resetForm, formData, setStep3Data, prevStep } =
     useDriverFormContext();
+  const searchParams = useSearchParams();
+  const riderId = searchParams.get("riderId");
+  const isEditMode = Boolean(riderId);
 
   const initialValues = React.useMemo<Step3Values>(
     () => (formData.step3 as Step3Values | null) ?? EMPTY_STEP3,
@@ -52,7 +57,8 @@ export const Step3Form: React.FC = () => {
 
   const { data: zonesData } = useGetZonesDropDown();
   const { data: vehicleType } = useGetVehicleTypesDropDown();
-  const { mutateAsync: ApplyForRider, isPending } = useApplyForRider();
+  const { mutateAsync: ApplyForRider, isPending: isCreating } = useApplyForRider();
+  const { mutateAsync: UpdateRider, isPending: isUpdating } = useUpdateRiderPublic();
 
   const zoneOptions = React.useMemo(
     () =>
@@ -70,6 +76,7 @@ export const Step3Form: React.FC = () => {
       })) ?? [],
     [vehicleType],
   );
+
   const handleSubmit = async (
     values: Step3Values,
     { setSubmitting }: { setSubmitting: (s: boolean) => void },
@@ -96,7 +103,7 @@ export const Step3Form: React.FC = () => {
         !formData.step2.vehicle_registration_back ||
         !formData.step2.profile_image;
 
-      if (missingFile) {
+      if (missingFile && !isEditMode) {
         toast.error("Upload all required documents before submitting.");
         return;
       }
@@ -118,27 +125,70 @@ export const Step3Form: React.FC = () => {
         vehicle_registration_front,
         vehicle_registration_back,
       } = formData.step2;
+      const isFile = (value: unknown): value is File => value instanceof File;
+      const toFile = (value: File | null | undefined) =>
+        isFile(value) ? value : undefined;
 
       const payload: BecomeRiderPayload = {
         ...step1Payload,
         ...values,
         model_year_limit: values.model_year_limit ?? 0,
-        profile_image: profile_image ?? undefined,
-        driver_license_front: driver_license_front ?? undefined,
-        driver_license_back: driver_license_back ?? undefined,
-        national_id_passport_front:
-          national_id_passport_front ?? undefined,
-        national_id_passport_back:
-          national_id_passport_back ?? undefined,
-        vehicle_registration_front:
-          vehicle_registration_front ?? undefined,
-        vehicle_registration_back:
-          vehicle_registration_back ?? undefined,
+        profile_image: toFile(profile_image),
+        driver_license_front: toFile(driver_license_front),
+        driver_license_back: toFile(driver_license_back),
+        national_id_passport_front: toFile(national_id_passport_front),
+        national_id_passport_back: toFile(national_id_passport_back),
+        vehicle_registration_front: toFile(vehicle_registration_front),
+        vehicle_registration_back: toFile(vehicle_registration_back),
       };
 
-     const response =  await ApplyForRider(payload);
-      toast.success(response.message  || "Rider application submitted successfully.");
-      resetForm();
+      const formDataPayload = new FormData();
+      formDataPayload.append('name', formData.step1.name);
+      formDataPayload.append('email', formData.step1.email);
+      formDataPayload.append('phone', formData.step1.phone);
+      if (formData.step1.password) {
+        formDataPayload.append('password', formData.step1.password);
+      }
+      formDataPayload.append('zone_id', values.zone_id);
+      formDataPayload.append(
+        'availabilityStatus',
+        formData.registrationDetails?.availabilityStatus ?? 'offline',
+      );
+      formDataPayload.append('vehicle_name', values.vehicle_name);
+      formDataPayload.append('vehicle_colour', values.vehicle_colour);
+      formDataPayload.append('vehicle_no', values.vehicle_no);
+      formDataPayload.append('model_year', String(values.model_year_limit ?? 0));
+      formDataPayload.append('is_four_wheeler', String(values.is_four_wheeler));
+      formDataPayload.append('air_conditioning', String(values.air_conditioning));
+      formDataPayload.append('no_cosmetic_damage', String(values.no_cosmetic_damage));
+      if (values.vehicle_type_id) {
+        formDataPayload.append('type', values.vehicle_type_id);
+      }
+
+      if (payload.profile_image) formDataPayload.append('profile_image', payload.profile_image);
+      if (payload.driver_license_front) formDataPayload.append('driver_license_front', payload.driver_license_front);
+      if (payload.driver_license_back) formDataPayload.append('driver_license_back', payload.driver_license_back);
+      if (payload.national_id_passport_front) {
+        formDataPayload.append('national_id_passport_front', payload.national_id_passport_front);
+      }
+      if (payload.national_id_passport_back) {
+        formDataPayload.append('national_id_passport_back', payload.national_id_passport_back);
+      }
+      if (payload.vehicle_registration_front) {
+        formDataPayload.append('vehicle_registration_front', payload.vehicle_registration_front);
+      }
+      if (payload.vehicle_registration_back) {
+        formDataPayload.append('vehicle_registration_back', payload.vehicle_registration_back);
+      }
+
+      const response = riderId
+        ? await UpdateRider({ riderId, formData: formDataPayload })
+        : await ApplyForRider(payload);
+
+      toast.success(response.message || "Rider application submitted successfully.");
+      if (!riderId) {
+        resetForm();
+      }
     } catch (error) {
       handleApiError(error as ApiErrorResponse)
     } finally {
@@ -249,8 +299,8 @@ export const Step3Form: React.FC = () => {
               </AppButton>
               <AppButton
                 type="submit"
-                isLoading={isSubmitting || isPending}
-                disabled={isSubmitting || isPending}
+                isLoading={isSubmitting || isCreating || isUpdating}
+                disabled={isSubmitting || isCreating || isUpdating}
                 className="w-full rounded-[12px] px-6 sm:mt-4 sm:w-auto sm:min-w-[160px] sm:px-10 md:px-12"
               >
                 Submit

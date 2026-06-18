@@ -1,6 +1,7 @@
 'use client';
 
 import { ArrowLeft } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
 import { AppButton } from '@/components/shared/AppButton';
 import { AppFileInput } from '@/components/shared/AppFileInput';
 import { useDriverFormContext } from '@/contexts/become-a-rider-form';
@@ -30,6 +31,10 @@ const EMPTY_STEP2: Step2Values = {
 
 export const Step2Form: React.FC = () => {
   const { setStep2Data, nextStep, prevStep, formData } = useDriverFormContext();
+  const searchParams = useSearchParams();
+  const riderId = searchParams.get('riderId');
+  const registrationDetails = formData.registrationDetails;
+  const isEditMode = Boolean(riderId);
 
   const initialValues = React.useMemo<Step2Values>(
     () => (formData.step2 as Step2Values | null) ?? EMPTY_STEP2,
@@ -65,7 +70,12 @@ export const Step2Form: React.FC = () => {
       <Formik
         initialValues={initialValues}
         enableReinitialize // ← important
-        validate={validateBecomeRiderStep2}
+        validate={(values) => {
+          if (isEditMode) {
+            return {};
+          }
+          return validateBecomeRiderStep2(values);
+        }}
         onSubmit={handleSubmit}
       >
         {({ isSubmitting }) => (
@@ -76,6 +86,7 @@ export const Step2Form: React.FC = () => {
                 label="Profile"
                 requiredAsterisk
                 previewHeight={120}
+                previewUrl={registrationDetails?.documents?.profileImage ?? undefined}
               />
             
             <div className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2">
@@ -84,12 +95,14 @@ export const Step2Form: React.FC = () => {
                 label="Driver license front"
                 requiredAsterisk
                 previewHeight={120}
+                previewUrl={registrationDetails?.documents?.driverLicenseFront ?? undefined}
               />
               <AppFileInput
                 name="driver_license_back"
                 label="Driver license back"
                 requiredAsterisk
                 previewHeight={120}
+                previewUrl={registrationDetails?.documents?.driverLicenseBack ?? undefined}
               />
             </div>
 
@@ -99,12 +112,14 @@ export const Step2Form: React.FC = () => {
                 label="National ID or passport front"
                 requiredAsterisk
                 previewHeight={120}
+                previewUrl={registrationDetails?.documents?.nationalIdPassportFront ?? undefined}
               />
               <AppFileInput
                 name="national_id_passport_back"
                 label="National ID or passport back"
                 requiredAsterisk
                 previewHeight={120}
+                previewUrl={registrationDetails?.documents?.nationalIdPassportBack ?? undefined}
               />
             </div>
 
@@ -114,12 +129,14 @@ export const Step2Form: React.FC = () => {
                 label="Vehicle registration front"
                 requiredAsterisk
                 previewHeight={120}
+                previewUrl={registrationDetails?.documents?.vehicleRegistrationFront ?? undefined}
               />
               <AppFileInput
                 name="vehicle_registration_back"
                 label="Vehicle registration back"
                 requiredAsterisk
                 previewHeight={120}
+                previewUrl={registrationDetails?.documents?.vehicleRegistrationBack ?? undefined}
               />
             </div>
 
