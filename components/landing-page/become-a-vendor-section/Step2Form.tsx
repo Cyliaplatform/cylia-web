@@ -3,11 +3,12 @@
 import * as React from 'react';
 import { Form, Formik } from 'formik';
 import { ArrowLeft } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { AppButton } from '@/components/shared/AppButton';
 import { AppFileInput } from '@/components/shared/AppFileInput';
 import { useVendorFormContext, type VendorStep2Data } from '@/contexts/become-a-vendor-form';
-import { useApplyForVendor } from '@/hooks/api/become-a-vendor';
+import { useApplyForVendor, useUpdateVendorPublic } from '@/hooks/api/become-a-vendor';
 import { validateBecomeVendorStep2 } from '@/schemas/become-vendor-schema';
 import type { ApplyForVendorPayload } from '@/types/api/become-a-vendor.api';
 import { handleApiError } from '@/lib/toast-error';
@@ -23,12 +24,17 @@ const EMPTY_STEP2: VendorStep2Data = {
 
 export const Step2Form: React.FC = () => {
   const { setStep2Data, prevStep, formData, resetForm } = useVendorFormContext();
+  const searchParams = useSearchParams();
+  const vendorId = searchParams.get('vendorId');
+  const registrationDetails = formData.registrationDetails;
+  const isEditMode = Boolean(vendorId);
 
   const initialValues = React.useMemo<VendorStep2Data>(
     () => formData.step2 ?? EMPTY_STEP2,
     [formData.step2],
   );
-const { mutateAsync: ApplyForVendor, isPending } = useApplyForVendor();
+  const { mutateAsync: ApplyForVendor, isPending: isCreating } = useApplyForVendor();
+  const { mutateAsync: UpdateVendor, isPending: isUpdating } = useUpdateVendorPublic();
   const handleSubmit = async (
     values: VendorStep2Data,
     { setSubmitting }: { setSubmitting: (s: boolean) => void },
@@ -54,6 +60,10 @@ const { mutateAsync: ApplyForVendor, isPending } = useApplyForVendor();
         return;
       }
 
+      const isFile = (value: unknown): value is File => value instanceof File;
+      const toFile = (value: File | string | null | undefined) =>
+        isFile(value) ? value : undefined;
+
       const payload: ApplyForVendorPayload = {
         name: formData.step1.name,
         email: formData.step1.email,
@@ -61,19 +71,43 @@ const { mutateAsync: ApplyForVendor, isPending } = useApplyForVendor();
         password: formData.step1.password,
         zone_id: formData.step1.zone_id,
         allow_password_change: formData.step1.changePasswordAllowed ?? false,
-        vendorImage: values.logo ?? undefined,
-        business_liscence_front_file:
-          values.business_license_front ?? undefined,
-        business_liscence_back_file:
-          values.business_license_back ?? undefined,
-        national_id_front_file:
-          values.national_id_passport_front ?? undefined,
-        national_id_back_file:
-          values.national_id_passport_back ?? undefined,
-        business_trademark_file: values.logo ?? undefined,
+        vendorImage: toFile(values.logo),
+        business_liscence_front_file: toFile(values.business_license_front),
+        business_liscence_back_file: toFile(values.business_license_back),
+        national_id_front_file: toFile(values.national_id_passport_front),
+        national_id_back_file: toFile(values.national_id_passport_back),
+        business_trademark_file: toFile(values.logo),
       };
 
-      await ApplyForVendor(payload);
+      const formDataPayload = new FormData();
+      formDataPayload.append('name', payload.name);
+      formDataPayload.append('email', payload.email);
+      formDataPayload.append('phone', payload.phone);
+      if (payload.password) formDataPayload.append('password', payload.password);
+      formDataPayload.append('zone_id', payload.zone_id);
+      formDataPayload.append('approve_all_stores', String(false));
+      if (isFile(payload.vendorImage)) formDataPayload.append('profile', payload.vendorImage);
+      if (isFile(payload.business_liscence_front_file)) {
+        formDataPayload.append('business_liscence_front_file', payload.business_liscence_front_file);
+      }
+      if (isFile(payload.business_liscence_back_file)) {
+        formDataPayload.append('business_liscence_back_file', payload.business_liscence_back_file);
+      }
+      if (isFile(payload.national_id_front_file)) {
+        formDataPayload.append('national_id_front_file', payload.national_id_front_file);
+      }
+      if (isFile(payload.national_id_back_file)) {
+        formDataPayload.append('national_id_back_file', payload.national_id_back_file);
+      }
+      if (isFile(payload.business_trademark_file)) {
+        formDataPayload.append('business_trademark_file', payload.business_trademark_file);
+      }
+
+      if (vendorId) {
+        await UpdateVendor({ vendorId, formData: formDataPayload });
+      } else {
+        await ApplyForVendor(payload);
+      }
 
       toast.success('Vendor application submitted successfully.');
       resetForm();
@@ -98,7 +132,12 @@ const { mutateAsync: ApplyForVendor, isPending } = useApplyForVendor();
       <Formik
         initialValues={initialValues}
         enableReinitialize
-        validate={validateBecomeVendorStep2}
+        validate={(values) => {
+          if (isEditMode) {
+            return {};
+          }
+          return validateBecomeVendorStep2(values);
+        }}
         onSubmit={handleSubmit}
       >
         {({ isSubmitting }) => (
@@ -110,6 +149,11 @@ const { mutateAsync: ApplyForVendor, isPending } = useApplyForVendor();
                   label="Business trademark or logo"
                   requiredAsterisk
                   previewHeight={140}
+                  previewUrl={
+                    (formData.step2?.logo as string | undefined) ??
+                    registrationDetails?.profilePhoto ??
+                    undefined
+                  }
                 />
               </div>
 
@@ -118,24 +162,44 @@ const { mutateAsync: ApplyForVendor, isPending } = useApplyForVendor();
                 label="Business license front"
                 requiredAsterisk
                 previewHeight={120}
+                previewUrl={
+                  (formData.step2?.business_license_front as string | undefined) ??
+                  registrationDetails?.businessLicenceFront ??
+                  undefined
+                }
               />
               <AppFileInput
                 name="business_license_back"
                 label="Business license back"
                 requiredAsterisk
                 previewHeight={120}
+                previewUrl={
+                  (formData.step2?.business_license_back as string | undefined) ??
+                  registrationDetails?.businessLicenceBack ??
+                  undefined
+                }
               />
               <AppFileInput
                 name="national_id_passport_front"
                 label="National ID or passport front"
                 requiredAsterisk
                 previewHeight={120}
+                previewUrl={
+                  (formData.step2?.national_id_passport_front as string | undefined) ??
+                  registrationDetails?.nationalIdFront ??
+                  undefined
+                }
               />
               <AppFileInput
                 name="national_id_passport_back"
                 label="National ID or passport back"
                 requiredAsterisk
                 previewHeight={120}
+                previewUrl={
+                  (formData.step2?.national_id_passport_back as string | undefined) ??
+                  registrationDetails?.nationalIdBack ??
+                  undefined
+                }
               />
             </div>
 
@@ -152,8 +216,8 @@ const { mutateAsync: ApplyForVendor, isPending } = useApplyForVendor();
               </AppButton>
               <AppButton
                 type="submit"
-                isLoading={isSubmitting || isPending}
-                disabled={isSubmitting || isPending}
+                isLoading={isSubmitting || isCreating || isUpdating}
+                disabled={isSubmitting || isCreating || isUpdating}
                 className="w-full rounded-[12px] px-6 sm:mt-4 sm:w-auto sm:min-w-[160px] sm:px-10 md:px-12"
               >
                 Submit

@@ -186,23 +186,17 @@ export const AppSelect = ({
           ) : options.length > 0 ? (
             options.map((option) => {
               const optionValue =
-                typeof option === 'string' ? option : option.key;
-              let optionLabel =
                 typeof option === 'string' ? option : option.value;
-
-              // Radix UI Select doesn't allow empty string values
-              // Replace empty strings with a placeholder value
-              if (optionLabel === '') {
-                optionLabel = 'all';
-              }
+              const optionLabel =
+                typeof option === 'string' ? option : option.key;
 
               return (
                 <SelectItem
                   className="capitalize"
-                  key={optionLabel}
-                  value={optionLabel}
+                  key={optionValue}
+                  value={optionValue}
                 >
-                  {optionValue}
+                  {optionLabel}
                 </SelectItem>
               );
             })

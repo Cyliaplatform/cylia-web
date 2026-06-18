@@ -1,6 +1,12 @@
 'use client';
 
-import React, { createContext, ReactNode, useContext, useState } from 'react';
+import React, {
+  createContext,
+  ReactNode,
+  useCallback,
+  useContext,
+  useState,
+} from 'react';
 
 export interface Step1Data {
   name: string;
@@ -28,6 +34,46 @@ export interface Step3Data {
   vehicle_type_id: string;
   zone_id: string;
   licenseNumber: string;
+  vehicle_name?: string;
+  vehicle_colour?: string;
+  vehicle_no?: string;
+}
+
+export interface RiderRegistrationDetails {
+  riderId: string;
+  userId: string;
+  name: string;
+  email: string;
+  phone: string;
+  status: string;
+  rejectionReason: string | null;
+  zoneId: string;
+  zoneName: string | null;
+  licenseNumber: string;
+  availabilityStatus: string | null;
+  isApproved: boolean;
+  isOnboardingCompleted: boolean;
+  vehicle?: {
+    id: string;
+    vehicleTypeId?: string;
+    vehicleNo: string;
+    vehicleName: string;
+    vehicleColour: string;
+    vehicleType: string;
+    isFourWheeler?: boolean;
+    airConditioning?: boolean;
+    noCosmeticDamage?: boolean;
+  } | null;
+  documents?: {
+    driverLicenseFront?: string | null;
+    driverLicenseBack?: string | null;
+    nationalIdPassportFront?: string | null;
+    nationalIdPassportBack?: string | null;
+    vehicleRegistrationFront?: string | null;
+    vehicleRegistrationBack?: string | null;
+    profileImage?: string | null;
+    companyCommercialRegistration?: string | null;
+  } | null;
 }
 
 // Complete Driver Form Data
@@ -35,6 +81,7 @@ export interface DriverFormData {
   step1: Step1Data | null;
   step2: Step2Data | null;
   step3: Step3Data | null;
+  registrationDetails: RiderRegistrationDetails | null;
 }
 
 interface DriverFormContextType {
@@ -44,6 +91,7 @@ interface DriverFormContextType {
   setStep1Data: (data: Step1Data) => void;
   setStep2Data: (data: Step2Data) => void;
   setStep3Data: (data: Step3Data) => void;
+  hydrateFromRegistrationDetails: (data: RiderRegistrationDetails) => void;
   nextStep: () => void;
   prevStep: () => void;
   goToStep: (step: number) => void;
@@ -80,46 +128,75 @@ export const DriverFormProvider: React.FC<DriverFormProviderProps> = ({
     step1: null,
     step2: null,
     step3: null,
+    registrationDetails: null,
   });
 
-  const setStep1Data = (data: Step1Data) => {
+  const setStep1Data = useCallback((data: Step1Data) => {
     setFormData((prev) => ({ ...prev, step1: data }));
-  };
+  }, []);
 
-  const setStep2Data = (data: Step2Data) => {
+  const setStep2Data = useCallback((data: Step2Data) => {
     setFormData((prev) => ({ ...prev, step2: data }));
-  };
+  }, []);
 
-  const setStep3Data = (data: Step3Data) => {
+  const setStep3Data = useCallback((data: Step3Data) => {
     setFormData((prev) => ({ ...prev, step3: data }));
-  };
+  }, []);
 
-  const nextStep = () => {
+  const hydrateFromRegistrationDetails = useCallback((data: RiderRegistrationDetails) => {
+    setCurrentStep(1);
+    setFormData({
+      step1: {
+        name: data.name ?? '',
+        email: data.email ?? '',
+        phone: data.phone ?? '',
+        autoGeneratePassword: false,
+        password: '',
+      },
+      step2: null,
+      step3: {
+        model_year_limit: null,
+        is_four_wheeler: data.vehicle?.isFourWheeler ?? false,
+        air_conditioning: data.vehicle?.airConditioning ?? false,
+        no_cosmetic_damage: data.vehicle?.noCosmeticDamage ?? false,
+        vehicle_type_id: data.vehicle?.vehicleTypeId ?? '',
+        zone_id: data.zoneId ?? '',
+        licenseNumber: data.licenseNumber ?? '',
+        vehicle_name: data.vehicle?.vehicleName ?? '',
+        vehicle_colour: data.vehicle?.vehicleColour ?? '',
+        vehicle_no: data.vehicle?.vehicleNo ?? '',
+      },
+      registrationDetails: data,
+    });
+  }, []);
+
+  const nextStep = useCallback(() => {
     if (currentStep < totalSteps) {
       setCurrentStep((prev) => prev + 1);
     }
-  };
+  }, [currentStep, totalSteps]);
 
-  const prevStep = () => {
+  const prevStep = useCallback(() => {
     if (currentStep > 1) {
       setCurrentStep((prev) => prev - 1);
     }
-  };
+  }, [currentStep]);
 
-  const goToStep = (step: number) => {
+  const goToStep = useCallback((step: number) => {
     if (step >= 1 && step <= totalSteps) {
       setCurrentStep(step);
     }
-  };
+  }, [totalSteps]);
 
-  const resetForm = () => {
+  const resetForm = useCallback(() => {
     setCurrentStep(1);
     setFormData({
       step1: null,
       step2: null,
       step3: null,
+      registrationDetails: null,
     });
-  };
+  }, []);
 
   const canGoNext = currentStep < totalSteps;
   const canGoPrev = currentStep > 1;
@@ -131,6 +208,7 @@ export const DriverFormProvider: React.FC<DriverFormProviderProps> = ({
     setStep1Data,
     setStep2Data,
     setStep3Data,
+    hydrateFromRegistrationDetails,
     nextStep,
     prevStep,
     goToStep,

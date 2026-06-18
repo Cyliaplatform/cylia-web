@@ -1,6 +1,7 @@
 import FeaturesSection from "@/components/landing-page/app-features-section";
 import BecomeRiderSection from "@/components/landing-page/become-a-rider-section";
 import BecomeVendorSection from "@/components/landing-page/become-a-vendor-section";
+import RegistrationPrefillGate from "@/components/landing-page/RegistrationPrefillGate";
 import { DownloadAppSection } from "@/components/landing-page/download-apps-section";
 import ExclusiveBenefitsSection from "@/components/landing-page/exclusive-benefits-section";
 import FAQSection from "@/components/landing-page/faq-section";
@@ -10,6 +11,7 @@ import RatingAndReviewsSection from "@/components/landing-page/rating-review-sec
 export default function LanndingPage() {
   return (
     <div className="space-y-8">
+      <RegistrationPrefillGate />
       <HeroSection />
       <section id="download-app">
         <DownloadAppSection />

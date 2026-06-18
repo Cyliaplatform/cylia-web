@@ -1,8 +1,9 @@
 import Axios from "@/config/axios";
 import { BecomeRiderPayload, BecomeRiderResponse, VehicleType, Zone } from "@/types/api/become-a-rider.api";
 import { ApiErrorResponse } from "@/types/api/common";
-import { useMutation, UseMutationOptions, useQueryClient } from "@tanstack/react-query";
+import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
+import { RiderRegistrationDetails } from "@/contexts/become-a-rider-form";
 
 export const useApplyForRider = (
     options?: UseMutationOptions<
@@ -11,7 +12,6 @@ export const useApplyForRider = (
         BecomeRiderPayload
     >
 ) => {
-    const queryClient = useQueryClient();
     return useMutation<
         BecomeRiderResponse,
         ApiErrorResponse,
@@ -83,6 +83,34 @@ export const useApplyForRider = (
     });
 };
 
+export const useUpdateRiderPublic = (
+    options?: UseMutationOptions<
+        BecomeRiderResponse,
+        ApiErrorResponse,
+        { riderId: string; formData: FormData }
+    >
+) => {
+    return useMutation<
+        BecomeRiderResponse,
+        ApiErrorResponse,
+        { riderId: string; formData: FormData }
+    >({
+        mutationFn: async ({ riderId, formData }) => {
+            const res = await Axios.patch<BecomeRiderResponse>(
+                `/apps/deliveries/public/riders/public-update/${riderId}`,
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            );
+            return res.data;
+        },
+        ...options,
+    });
+};
+
 
 
 export const useGetVehicleTypesDropDown = (
@@ -106,6 +134,38 @@ export const useGetZonesDropDown = (
             const res = await Axios.get<Zone[]>('/auth/lumi/rider/dropdowns/zones');
             return res.data;
         },
+        ...options,
+    });
+};
+
+export const useGetRiderRegistrationDetailsByUser = (
+    userId?: string,
+    options?: UseQueryOptions<RiderRegistrationDetails, ApiErrorResponse>
+) => {
+    return useQuery<RiderRegistrationDetails, ApiErrorResponse>({
+        queryKey: ['rider-registration-details', userId],
+        queryFn: async () => {
+            const res = await Axios.get<RiderRegistrationDetails>(`/apps/deliveries/admin/riders/riders/registration-details/by-user/${userId}`);
+            return res.data;
+        },
+        enabled: Boolean(userId),
+        ...options,
+    });
+};
+
+export const useGetRiderRegistrationDetailsByRider = (
+    riderId?: string,
+    options?: UseQueryOptions<RiderRegistrationDetails, ApiErrorResponse>
+) => {
+    return useQuery<RiderRegistrationDetails, ApiErrorResponse>({
+        queryKey: ['rider-registration-details-by-rider', riderId],
+        queryFn: async () => {
+            const res = await Axios.get<RiderRegistrationDetails>(
+                `/apps/deliveries/public/riders/registration-details/by-rider/${riderId}`,
+            );
+            return res.data;
+        },
+        enabled: Boolean(riderId),
         ...options,
     });
 };
