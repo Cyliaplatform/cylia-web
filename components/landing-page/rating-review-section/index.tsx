@@ -1,6 +1,5 @@
 
 import ReviewsSlider from "./ReviewsSlider";
-import DownloadAppSection from "./DownloadAppSection";
 import SectionLabel from "./SectionLabel";
 import RatingSummaryCard from "./RatingSummaryCard";
 

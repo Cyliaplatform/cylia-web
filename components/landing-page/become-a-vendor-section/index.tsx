@@ -1,5 +1,5 @@
+import Image from "next/image";
 import sticker from "@/public/images/logo/hero-food-text-top-right-sticker.svg";
-import { AppTextMarquee } from '@/components/shared/AppTextMarquee';
 import BecomeVendorForm from "./BecomeVendorForm";
 import { VendorFormStepper } from "./FormStepper";
 
@@ -16,8 +16,8 @@ export default function BecomeVendorSection() {
               with{" "}
               <span className="relative inline-block">
                 Cylia
-                <img
-                  src={sticker.src}
+                <Image
+                  src={sticker}
                   alt="sticker"
                   className="absolute -right-6 top-0.5 h-6 w-6 rotate-12"
                 />

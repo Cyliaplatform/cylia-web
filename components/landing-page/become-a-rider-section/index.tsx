@@ -1,4 +1,4 @@
-import BecomeRiderForm from "./BecomeRiderForm";
+import Image from "next/image";
 import sticker from "@/public/images/logo/hero-food-text-top-right-sticker.svg";
 import DriverFormStepper from "./FormStepper";
 import AddDriverForm from "./BecomeRiderForm";
@@ -15,8 +15,8 @@ export default function BecomeRiderSection() {
               Rewarding Delivery{" "}
               <span className="relative inline-block">
                 Network
-                <img
-                  src={sticker.src}
+                <Image
+                  src={sticker}
                   alt="sticker"
                   className="absolute -right-7 top-0.5 h-6 w-6 rotate-12"
                 />

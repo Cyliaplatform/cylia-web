@@ -1,5 +1,4 @@
 import Image from "next/image";
-import SectionLabel from "./SectionLabel";
 
 export default function DownloadAppSection() {
   return (
